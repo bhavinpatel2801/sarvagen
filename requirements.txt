@@ -1,0 +1,35 @@
+# LLMs and Transformers
+transformers
+sentence-transformers
+llama-cpp-python
+langchain
+crewai
+
+# Vision
+torch
+torchvision
+Pillow
+openclip-torch
+git+https://github.com/salesforce/BLIP.git
+opencv-python
+
+# Audio
+whisper
+tts
+pydub
+
+# PDF and File
+PyMuPDF
+pdfplumber
+python-docx
+
+# Memory / Vector DB
+faiss-cpu
+
+# UI
+streamlit
+
+# Utils
+tqdm
+numpy
+scikit-learn
