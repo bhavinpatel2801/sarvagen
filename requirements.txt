@@ -1,35 +1,30 @@
-# LLMs and Transformers
-transformers
-sentence-transformers
-llama-cpp-python
-langchain
-crewai
+# Core GenAI modules
+transformers==4.35.2
+diffusers==0.24.0
+sentence-transformers==2.2.2
+accelerate==0.23.0
+huggingface-hub==0.20.2
 
-# Vision
-torch
-torchvision
-Pillow
-openclip-torch
-git+https://github.com/salesforce/BLIP.git
-opencv-python
+# Vision (BLIP-2 captioning)
+torch>=1.13.0  # or your installed version
+Pillow>=9.0.0
 
-# Audio
-whisper
-tts
-pydub
+# PDF Processing
+PyMuPDF==1.23.7  # known stable with modern Python
 
-# PDF and File
-PyMuPDF
-pdfplumber
-python-docx
+# Audio (fallback TTS using pyttsx3)
+pyttsx3==2.90
 
-# Memory / Vector DB
-faiss-cpu
+# Vector Search
+faiss-cpu==1.7.4
 
-# UI
-streamlit
+# App Framework
+streamlit==1.33.0
 
 # Utils
+numpy>=1.21
+requests
 tqdm
-numpy
-scikit-learn
+regex
+pyyaml
+uuid
