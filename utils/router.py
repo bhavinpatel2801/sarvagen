@@ -3,16 +3,11 @@
 import mimetypes
 import os
 import sys
-import os
-# 🔧 Add the project root directory to Python's import path
+
+# 🔧 Ensure project root is in path (for local imports)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
-# Add current folder
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Add parent folder (for core/, models/, utils/)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def detect_modality(file_path: str) -> str:
     """
@@ -32,7 +27,7 @@ def detect_modality(file_path: str) -> str:
         elif mime_type == "application/pdf":
             return "pdf"
 
-    # Fallback to extension check
+    # Fallback to extension
     if ext in [".txt", ".md"]:
         return "text"
     elif ext in [".jpg", ".jpeg", ".png", ".bmp", ".gif"]:
@@ -43,6 +38,3 @@ def detect_modality(file_path: str) -> str:
         return "pdf"
 
     return "unknown"
-
-
-

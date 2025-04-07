@@ -1,9 +1,10 @@
 # core/processor.py
 
 from utils.router import detect_modality
-from core.memory import MemoryStore
-
-memory = MemoryStore()
+from models.vision import caption_image
+from models.audio_transcription import audio_transcription
+from models.pdf import extract_pdf_text
+from core.memory import memory
 
 def route_input(file_path: str):
     modality = detect_modality(file_path)
@@ -17,36 +18,32 @@ def route_input(file_path: str):
     elif modality == "pdf":
         return process_pdf(file_path)
     else:
-        raise ValueError(f"Unknown modality for file: {file_path}")
-
+        raise ValueError(f"❌ Unknown modality for file: {file_path}")
 
 def process_text(path):
     with open(path, "r", encoding="utf-8") as f:
-        content = f.read()
+        content = f.read().strip()
     memory.add_memory(content, modality="text")
-    recalls = memory.query(content)
+    recalls = memory.query(content, modality_filter="text")
     return format_result(content, recalls)
 
 def process_image(path):
-    # Placeholder: Captioning will be added later
-    content = f"Image file path: {path}"
+    content = caption_image(path)
     memory.add_memory(content, modality="image")
-    recalls = memory.query("image")
+    recalls = memory.query("describe image", modality_filter="image")
     return format_result(content, recalls)
 
 def process_audio(path):
-    # Placeholder: Whisper transcription will be added later
-    content = f"Audio file path: {path}"
+    content = audio_transcription(path)
     memory.add_memory(content, modality="audio")
-    recalls = memory.query("audio")
+    recalls = memory.query("speech", modality_filter="audio")
     return format_result(content, recalls)
 
 def process_pdf(path):
-    content = f"PDF file path: {path}"
+    content = extract_pdf_text(path)
     memory.add_memory(content, modality="pdf")
-    recalls = memory.query("pdf")
+    recalls = memory.query("pdf content", modality_filter="pdf")
     return format_result(content, recalls)
-
 
 def format_result(content, recalls):
     out = f"🧠 **Input Stored:**\n\n{content}\n\n"
@@ -57,4 +54,3 @@ def format_result(content, recalls):
     else:
         out += "🕳️ No related past memory found."
     return out
-

@@ -1,5 +1,3 @@
-# core/memory.py
-
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
@@ -8,16 +6,22 @@ import os
 import pickle
 
 class MemoryStore:
-    def __init__(self, dim=384, index_path=None):
+    def __init__(self, dim=384, index_path=None, autosave=True):
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         self.index = faiss.IndexFlatL2(dim)
         self.metadata = {}  # ID -> metadata
         self.counter = 0
         self.index_path = index_path
+        self.autosave = autosave
+
         if index_path:
             self._load(index_path)
 
+    def _normalize(self, text: str) -> str:
+        return text.strip().lower()
+
     def add_memory(self, content, source="user", modality="text"):
+        content = self._normalize(content)
         vector = self.model.encode([content])[0]
         self.index.add(np.array([vector]).astype('float32'))
 
@@ -30,17 +34,22 @@ class MemoryStore:
         }
         self.counter += 1
 
-    def query(self, query_text, top_k=3):
+        if self.autosave and self.index_path:
+            self.save(self.index_path)
+
+    def query(self, query_text, top_k=3, modality_filter=None):
         if self.counter == 0:
             return []
 
-        query_vec = self.model.encode([query_text])[0].astype('float32')
+        query_vec = self.model.encode([self._normalize(query_text)])[0].astype('float32')
         D, I = self.index.search(np.array([query_vec]), top_k)
 
         results = []
         for idx in I[0]:
             if idx in self.metadata:
-                results.append(self.metadata[idx])
+                entry = self.metadata[idx]
+                if modality_filter is None or entry["modality"] == modality_filter:
+                    results.append(entry)
         return results
 
     def save(self, folder="data/faiss_store"):
@@ -59,4 +68,4 @@ class MemoryStore:
             self.counter = len(self.metadata)
 
 # ✅ Singleton for use across the system
-memory = MemoryStore()
+memory = MemoryStore(index_path="data/faiss_store")
