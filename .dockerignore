@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pkl
+index.faiss
+.env
+*.zip
+data/generated/
+data/faiss_store/
+data/test/
+
