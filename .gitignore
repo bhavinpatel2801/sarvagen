@@ -9,3 +9,9 @@ outputs/figures/*
 venv/
 .venv/
 checkpoints/
+checkpoints/*
+*.pth
+data/
+checkpoints/*.pth
+
+
