@@ -1,5 +1,3 @@
-# utils/prompt.py
-
 FEW_SHOT_TOOL_REASONING = """
 You are an intelligent agent. You can use tools to answer questions.
 Examples:

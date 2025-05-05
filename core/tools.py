@@ -1,15 +1,15 @@
-# core/tools.py
+# === Import model interfaces for different modalities ===
+from models.vision import caption_image                   # Captioning model for images
+from models.pdf import extract_pdf_text                   # Text extraction model for PDFs
+from models.generate_image import generate_image          # Text-to-image generation model
+from models.generate_audio import synthesize_speech       # Text-to-speech model
+from core.memory import memory                            # In-memory vector database for retrieval
+from models.image_segmentation import image_segmentation  # Image segmentation model
+from models.audio_transcription import audio_transcription # Audio transcription (speech-to-text) model
+from models.rag import rag_query                          # Retrieval-Augmented Generation query engine
+from models.llm_generation import llm_generation          # Large Language Model text generation interface (e.g., Ollama backend)
 
-from models.vision import caption_image
-from models.pdf import extract_pdf_text
-from models.generate_image import generate_image
-from models.generate_audio import synthesize_speech
-from core.memory import memory
-from models.image_segmentation import image_segmentation
-from models.audio_transcription import audio_transcription
-from models.rag import rag_query
-from models.llm_generation import llm_generation
-
+# === Tool Functions ===
 # Tool 1: Memory Retriever
 def search_memory_tool(query: str) -> str:
     recalls = memory.query(query)
@@ -66,11 +66,13 @@ TOOL_REGISTRY = {
     "llm_generation": llm_generation_tool
 }
 
+# Function to return list of available tools
 def list_tools():
     return list(TOOL_REGISTRY.keys())
 
+# Function to use a tool by name, with error handling
 def use_tool(name: str, input_text: str):
-    tool = TOOL_REGISTRY.get(name)
+    tool = TOOL_REGISTRY.get(name)                     # Fetch the function from registry
     if not tool:
-        return f"❌ Tool '{name}' not found."
-    return tool(input_text)
+        return f"❌ Tool '{name}' not found."         # Return error if tool doesn't exist
+    return tool(input_text)                            # Call and return result from the tool
